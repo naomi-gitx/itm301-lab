@@ -1,0 +1,45 @@
+{
+    "users": [
+      {
+        "id": "1",
+        "name": "John Doe",
+        "email": "johndoe@example.com",
+        "image": "https://via.placeholder.com/150",
+        "places": [
+          {
+            "id": "1",
+            "name": "Central Park",
+            "description": "A large public park in New York City.",
+            "address": "New York, NY, USA",
+            "location": { "latitude": 40.785091, "longitude": -73.968285 },
+            "image": "https://via.placeholder.com/300"
+          },
+          {
+            "id": "2",
+            "name": "Empire State Building",
+            "description": "A famous skyscraper in New York City.",
+            "address": "350 5th Ave, New York, NY 10118",
+            "location": { "latitude": 40.748817, "longitude": -73.985428 },
+            "image": "https://via.placeholder.com/300"
+          }
+        ]
+      },
+      {
+        "id": "2",
+        "name": "Jane Smith",
+        "email": "janesmith@example.com",
+        "image": "https://via.placeholder.com/150",
+        "places": [
+          {
+            "id": "3",
+            "name": "Golden Gate Bridge",
+            "description": "A famous suspension bridge in San Francisco.",
+            "address": "San Francisco, CA 94129",
+            "location": { "latitude": 37.819929, "longitude": -122.478255 },
+            "image": "https://via.placeholder.com/300"
+          }
+        ]
+      }
+    ]
+  }
+  
