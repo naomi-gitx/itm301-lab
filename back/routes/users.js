@@ -1,14 +1,15 @@
 import express from "express";
-import bcrypt from "bcrypt"; // Import bcrypt to hash passwords
+import bcrypt from "bcrypt";
 import User from "../models/User.js";
 const router = express.Router();
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
 
 // Create a new user
 router.post("/signup", async (req, res) => {
   const { name, email, password, image } = req.body;
 
-  // Check if all required fields are present
   if (!name || !email || !password) {
     return res
       .status(400)
@@ -39,27 +40,21 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-const testPassword = async () => {
-    const plainPassword = "ss12345678";
-    const hashedPassword = "$2a$10$p3PeTSefO.H1wc7oob.lzu0oS6sekq64lPxTpvdA4crNP6e2fM82a"; // Replace with your DB hash
-  
-    const isMatch = await bcrypt.compare(plainPassword, hashedPassword);
-    console.log("Passwords match:", isMatch);
-  };
 
 //login
 router.post("/login", async (req, res) => {
     const { email, password } = req.body;
-  
     // Find user by email
     const user = await User.findOne({ email });
+    
     if (!user) {
       return res.status(400).json({ message: "User not exists" });
     }   
+    console.log(password);
+    console.log(user.password);
     
-    testPassword();
     // Compare passwords
-    const isMatch = await user.comparePassword(password);
+    const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) {
       return res.status(400).json({ message: "Password is incorrect" });
     }

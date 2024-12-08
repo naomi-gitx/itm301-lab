@@ -30,7 +30,10 @@ const Signin = () => {
         body: JSON.stringify(formData),
       });
       
-  
+      if(response){
+        console.log(response);
+        
+      }
       const data = await response.json();
   
       if (!response.ok) {

@@ -13,8 +13,7 @@ const PlaceList = () => {
     const fetchPlaces = async () => {
       try {
         setLoading(true);
-        // Replace with the actual backend URL
-        const response = await axios.get(`/api/places/${id}`);
+        const response = await axios.get(`http://localhost:5000/api/places/${id}`);
         setPlaces(response.data); // Store places in state
       } catch (err) {
         setError('Error fetching places');

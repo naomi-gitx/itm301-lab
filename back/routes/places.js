@@ -7,7 +7,6 @@ router.post('/places', async (req, res) => {
   const { userId, name, description, address, location, image } = req.body;
 
   try {
-    // Check if user exists
     const user = await User.findById(userId);
     if (!user) {
       return res.status(400).json({ error: 'User not found' });

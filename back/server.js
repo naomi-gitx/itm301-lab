@@ -5,6 +5,7 @@ import placeRoutes from "./routes/places.js";
 
 import cors from "cors";
 import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 connectDB();
