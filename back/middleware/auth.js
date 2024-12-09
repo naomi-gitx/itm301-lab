@@ -1,20 +1,18 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken"
 
-const authenticate = (req, res, next) => {
+const authenticateUser = (req, res, next) => {
   const token = req.header("Authorization")?.replace("Bearer ", "");
-
   if (!token) {
-    return res.status(401).json({ message: "Authorization token missing" });
+    return res.status(401).json({ message: "No token, authorization denied" });
   }
 
   try {
-    // Verify the token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // Attach user information to the request object
-    next(); // Call the next middleware or route handler
-  } catch (error) {
-    res.status(401).json({ message: "Invalid or expired token" });
+    req.user = decoded; // Attach user info to request object
+    next();
+  } catch (err) {
+    res.status(401).json({ message: "Token is not valid" });
   }
 };
 
-module.exports = authenticate;
+export default authenticateUser;

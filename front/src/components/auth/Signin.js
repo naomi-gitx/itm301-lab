@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AiOutlineArrowLeft } from "react-icons/ai";
+import { useUser } from "../../context/AppContext.js"; 
 
 const Signin = () => {
   const [formData, setFormData] = useState({
@@ -8,8 +8,9 @@ const Signin = () => {
     password: "",
   });
 
-  const [error, setError] = useState(null); // State to store error messages
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { setUser } = useUser();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,6 +19,7 @@ const Signin = () => {
       [name]: value,
     }));
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,29 +31,33 @@ const Signin = () => {
         },
         body: JSON.stringify(formData),
       });
-      
-      if(response){
-        console.log(response);
-        
-      }
+
       const data = await response.json();
-  
+
       if (!response.ok) {
         throw new Error(data.message || "Нэвтрэхэд алдаа гарлаа");
       }
-  
+
       // Store the token in localStorage
       localStorage.setItem("token", data.token);
-  
+
+      // Update the user context
+      setUser({
+        id: data.user._id,
+        name: data.user.name,
+        email: data.user.email,
+        image: data.user.image,
+      });
+
+      // Store user data in localStorage for persistence
+      localStorage.setItem("user", JSON.stringify(data.user));
+
       // Navigate to the dashboard or home page after successful login
       navigate("/");
-  
     } catch (error) {
       setError(error.message);
-      console.error("Error during sign-in:", error);
     }
   };
-  
 
   return (
     <div className="max-w-md mx-auto mt-12 p-6 border rounded-lg shadow-lg bg-white">

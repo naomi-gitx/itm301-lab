@@ -3,8 +3,7 @@ import bcrypt from "bcrypt";
 import User from "../models/User.js";
 const router = express.Router();
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-
+import authenticateUser from "../middleware/auth.js";
 
 // Create a new user
 router.post("/signup", async (req, res) => {
@@ -40,64 +39,53 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-
 //login
 router.post("/login", async (req, res) => {
-    const { email, password } = req.body;
-    // Find user by email
+  const { email, password } = req.body;
+  try {
     const user = await User.findOne({ email });
-    
-    if (!user) {
-      return res.status(400).json({ message: "User not exists" });
-    }   
-        
-    // Compare passwords
-    const isMatch = await bcrypt.compare(password, user.password)
-    if (!isMatch) {
-      return res.status(400).json({ message: "Password is incorrect" });
-    }
-  
-    // Generate JWT token
-    const token = jwt.sign(
-      { userId: user._id, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" } // Token expiration time (e.g., 1 hour)
-    );
-  
-    // Send the token to the client
-    res.json({ token });
-  });
 
+    const ismatch = await bcrypt.compare(password, user.password);
+
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(400).json({ message: "Invalid  password" });
+    }
+
+    // Generate JWT access token
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    res.status(200).json({ token, user });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // Get all users
 router.get("/users", async (req, res) => {
   try {
-    const users = await User.find().select("-password"); // Exclude password from response
+    const users = await User.find().select("-password");
     res.status(200).json(users);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-//get user
-router.get('/user', async (req, res) => {
-    try {
-      const { email } = req.body; // Get email from query parameters
-  
-      if (!email) {
-        return res.status(400).json({ message: "Email is required" });
-      }
-  
-      const user = await User.findOne({ email }); // Query the database
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-  
-      res.status(200).json(user); // Return the user data
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Server error" });
+
+// Get a user by ID
+router.get("/users/:userId", async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await User.findById(userId).select("name");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-  });
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 export default router;

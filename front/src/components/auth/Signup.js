@@ -47,14 +47,10 @@ const Signup = () => {
         body: JSON.stringify(requestBody),  // Send as JSON string
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
         throw new Error("Бүртгэл хийхэд алдаа гарлаа.");
       }
 
-
-      // Navigate to the sign-in page after successful signup
       navigate("/authenticate");
     } catch (error) {
       console.error(error);
