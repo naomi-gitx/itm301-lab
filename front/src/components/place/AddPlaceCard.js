@@ -110,11 +110,11 @@ const AddPlaceCard = () => {
           <input
             type="text"
             name="lat"
-            value={placeData.location.lat}
+            value={placeData.location.latitude}
             onChange={(e) =>
               setPlaceData({
                 ...placeData,
-                location: { ...placeData.location, lat: e.target.value },
+                location: { ...placeData.location, latitude: e.target.value },
               })
             }
             placeholder="Enter latitude"
@@ -128,11 +128,11 @@ const AddPlaceCard = () => {
           <input
             type="text"
             name="lng"
-            value={placeData.location.lng}
+            value={placeData.location.longitude}
             onChange={(e) =>
               setPlaceData({
                 ...placeData,
-                location: { ...placeData.location, lng: e.target.value },
+                location: { ...placeData.location, longitude: e.target.value },
               })
             }
             placeholder="Enter longitude"

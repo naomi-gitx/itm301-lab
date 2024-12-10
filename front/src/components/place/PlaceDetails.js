@@ -6,6 +6,7 @@ const PlaceDetails = () => {
   const { placeId } = useParams();
   const navigate = useNavigate();
   const [place, setPlace] = useState(null);
+  const [isOwner, setIsOwner] = useState(false);
 
   useEffect(() => {
     const fetchPlaceDetails = async () => {
@@ -15,6 +16,12 @@ const PlaceDetails = () => {
         );
 
         setPlace(response.data);
+
+        const loggedUser = JSON.parse(localStorage.getItem("user"));
+
+        if (loggedUser && response.data.userId === loggedUser._id) {
+          setIsOwner(true);
+        }
       } catch (error) {
         console.error("Error fetching place details:", error);
       }
@@ -22,7 +29,6 @@ const PlaceDetails = () => {
 
     fetchPlaceDetails();
   }, [placeId]);
-
 
   const handleDelete = async () => {
     const confirmDelete = window.confirm(
@@ -33,7 +39,7 @@ const PlaceDetails = () => {
     try {
       await axios.delete(`http://localhost:5000/api/places/${placeId}`);
       alert("Place deleted successfully");
-      navigate("/"); 
+      navigate("/");
     } catch (error) {
       console.error("Error deleting place:", error);
       alert("Failed to delete place. Please try again.");
@@ -68,17 +74,22 @@ const PlaceDetails = () => {
               : "Not available"}
           </p>
         </div>
-        <div className="px-6 py-4 border-t border-gray-300 flex space-x-4">
-          <button onClick={handleDelete} className="flex-1 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition focus:outline-none focus:ring-2 focus:ring-red-300">
-            Delete
-          </button>
-
-          <Link to={`/places/${place._id}/update`} className="flex-1 py-2 bg-button text-white rounded-lg font-medium hover:bg-accent-dark transition focus:outline-none focus:ring-2 focus:ring-blue-300 text-center" >
-            <button >
-              Update
+        {isOwner && ( 
+          <div className="px-6 py-4 border-t border-gray-300 flex space-x-4">
+            <button
+              onClick={handleDelete}
+              className="flex-1 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition focus:outline-none focus:ring-2 focus:ring-red-300"
+            >
+              Delete
             </button>
-          </Link>
-        </div>
+            <Link
+              to={`/places/${place._id}/update`}
+              className="flex-1 py-2 bg-button text-white rounded-lg font-medium hover:bg-accent-dark transition focus:outline-none focus:ring-2 focus:ring-blue-300 text-center"
+            >
+              Update
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

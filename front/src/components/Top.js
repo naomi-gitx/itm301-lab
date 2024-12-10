@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import { useUser } from "../context/AppContext.js"; // Import the context
+import { useUser } from "../context/AppContext.js";
 
 const Top = () => {
-  const { user, logout } = useUser(); // Access user and logout from context
+  const { user, logout } = useUser(); 
 
   return (
     <div className="bg-primary h-[100px] flex justify-between items-center px-6 shadow-md">
