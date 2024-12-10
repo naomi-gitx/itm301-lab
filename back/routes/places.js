@@ -42,7 +42,7 @@ router.get("/places/:userId", async (req, res) => {
 });
 
 //get one place
-router.get("/places/:placeId", async (req, res) => {
+router.get("/placeDetail/:placeId", async (req, res) => {
   const {placeId} = req.params;
   console.log("Received placeId:", placeId);
   try{

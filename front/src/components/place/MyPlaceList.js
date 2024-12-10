@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import PlaceCard from "./PlaceCard.js";
-import axios from "axios"; // Assuming you're using axios for HTTP requests
-import { useUser } from "../../context/AppContext.js"; // Import the context to check if user is logged in
+import axios from "axios"; 
+import { useUser } from "../../context/AppContext.js"; 
 
 const MyPlaceList = () => {
   const { userId } = useParams();

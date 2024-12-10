@@ -2,7 +2,6 @@ import express from "express";
 import connectDB from "./database/db.js";
 import userRoutes from "./routes/users.js";
 import placeRoutes from "./routes/places.js";
-
 import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();

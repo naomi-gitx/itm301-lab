@@ -20,7 +20,7 @@ const UpdatePlace = () => {
     const fetchPlaceDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/places/${placeId}`
+          `http://localhost:5000/api/placeDetail/${placeId}`
         );
         setPlace(response.data);
         setLoading(false);
@@ -28,7 +28,6 @@ const UpdatePlace = () => {
         console.error("Error fetching place details:", error);
       }
     };
-
     fetchPlaceDetails();
   }, [placeId]);
 
@@ -42,13 +41,23 @@ const UpdatePlace = () => {
 
   const handleLocationChange = (e) => {
     const { name, value } = e.target;
-    setPlace({
-      ...place,
+
+    if (name === "latitude" && (value < -90 || value > 90)) {
+      alert("Latitude must be between -90 and 90.");
+      return;
+    }
+    if (name === "longitude" && (value < -180 || value > 180)) {
+      alert("Longitude must be between -180 and 180.");
+      return;
+    }
+
+    setPlace((prevPlace) => ({
+      ...prevPlace,
       location: {
-        ...place.location,
+        ...prevPlace.location,
         [name]: value,
       },
-    });
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -59,7 +68,7 @@ const UpdatePlace = () => {
         place
       );
       console.log("Updated place:", response.data);
-      navigate(`/places/${placeId}`); // Redirect after successful update
+      navigate(`/places/${placeId}`);
     } catch (error) {
       console.error("Error updating place:", error);
     }
@@ -70,7 +79,7 @@ const UpdatePlace = () => {
   }
 
   return (
-    <div className="max-w-lg mx-auto p-4 bg-white shadow-lg rounded-lg">
+    <div className="max-w-lg mx-auto p-4 bg-white shadow-lg rounded-lg mt-10">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">
         Update Place
       </h2>
@@ -129,7 +138,7 @@ const UpdatePlace = () => {
               Latitude
             </label>
             <input
-              type="number"
+              type="string"
               id="latitude"
               name="latitude"
               value={place.location.latitude}
@@ -145,7 +154,7 @@ const UpdatePlace = () => {
               Longitude
             </label>
             <input
-              type="number"
+              type="string"
               id="longitude"
               name="longitude"
               value={place.location.longitude}
